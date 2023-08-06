@@ -88,6 +88,81 @@ class StudentController extends Controller
         }
     }
 
+    public function student_show_agency($id)
+    {
+        $students = Student::where('user_id', $id)->with('files')->get();
+        if ($students) {
+            return response()->json([
+                'message' => 'success',
+                'data' => $students,
+                'status' => 200
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'failed',
+                'status' => 500
+            ], 500);
+        }
+    }
+
+    public function student_show_details_agency($agency_id, $id)
+    {
+        //   dd($agency_id,$id) ;
+        $student = Student::where('user_id', $agency_id)->where('id', $id)->with('files')->first();
+        if ($student) {
+            return response()->json([
+                'message'    => 'success',
+                'status' => 200,
+                'data' => $student
+            ]);
+        } else {
+            return response()->json([
+                'message'    => 'failed',
+                'status' => 500
+            ], 500);
+        }
+    }
+
+    public function delete_file_by_agency($file_id)
+    {
+        // dd($file_id);
+        $file = File::find($file_id);
+        // dd(public_path($file->file_path));
+        unlink(public_path($file->file_path));
+        $delete = $file->delete();
+        if ($delete) {
+            return response()->json([
+                'message' => 'success',
+                'status' => 201,
+            ], 201);
+        } else {
+            return response()->json([
+                'message'    => 'failed',
+                'status' => 500
+            ], 500);
+        }
+    }
+
+    public function comment(Request $request, $agency_id, $student_id)
+    {
+        // dd($agency_id,$student_id);
+        $comment = Student::where('user_id', $agency_id)->where('id', $student_id)->first();
+        $comment->comment = $request->comment;
+        $save = $comment->save();
+        if ($save) {
+            return response()->json([
+                'message'     => 'Commenting done',
+                'status' => 201,
+                'data' => $comment
+            ], 201);
+        } else {
+            return response()->json([
+                'message' => 'failed',
+                'status' => 500
+            ], 500);
+        }
+    }
+
     public function change_status(Request $request)
     {
         // dd($request->all());
@@ -98,10 +173,10 @@ class StudentController extends Controller
             $student = Student::find($request->student_id);
             $files = File::where('student_id', $request->student_id)->get();
             foreach ($files as $docs) {
-                if ($docs->status == 1 && $docs->status != 0 && $docs->status != 2) {
+                if ($docs->status == 1 && $docs->status != 0 || $docs->status == 2) {
                     $student->status = 1;
                     $student->save();
-                } else if ($docs->status != 1 && $docs->status == 0 && $docs->status != 2) {
+                } else if ($docs->status != 1 && $docs->status == 0 || $docs->status == 2) {
                     $student->status = 0;
                     $student->save();
                 }

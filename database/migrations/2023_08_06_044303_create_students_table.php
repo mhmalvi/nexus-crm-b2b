@@ -18,6 +18,8 @@ class CreateStudentsTable extends Migration
             $table->text('student_name');
             $table->text('course_name');
             $table->bigInteger('user_id');
+            $table->tinyInteger('status')->default(2);
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
     }

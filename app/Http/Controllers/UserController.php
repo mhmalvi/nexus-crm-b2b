@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -65,6 +65,12 @@ class UserController extends Controller
     public function user_login(Request $request)         ////////////////  login  ////////////////
     {
         if ($request->role == 1) {
+            // if (Auth::attempt(['abn_number' => $request->abn_number, 'role' => $request->role, 'password' => $request->password])) {
+            //     $authUser = $request->user();
+            //     $authUser->api_token = Str::random(100);
+            //     $authUser->save();
+            //     return response()->json($authUser);
+            // }
             $user = User::where('abn_number', '=', $request->abn_number)->where('role', '=', $request->role)->first();
             // if (!Auth::attempt(['abn_number'=>$request->abn_number, 'password'=>$request->password, 'role'=>1])) {
             if (!$user || !Hash::check($request->password, $user->password)) {

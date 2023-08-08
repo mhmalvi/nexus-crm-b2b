@@ -3,11 +3,52 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\User;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\StudentMail;
 
 class StudentController extends Controller
 {
+
+    public function update_file(Request $request, $student_id)
+    {
+        $student = new Student();
+        if ($request->student_file) {
+            $data = array();
+
+            foreach ($request->student_file as $files) {
+                $fileName = $files->getClientOriginalName();
+                $checklist_exist = File::where('file_name', $fileName)->exists();
+                if (!$checklist_exist) {
+                    $path = $files->store('assets/student_files', ['disk' =>   'student_files']);
+                    $save = File::create([
+                        'file_path' => $path,
+                        'file_name' => $fileName,
+                        'student_id' => $student_id
+                    ]);
+                    $path = "";
+                } else {
+                    return response()->json([
+                        'message' => 'File already exists',
+                        'status' => 409
+                    ], 409);
+                }
+            }
+            if ($save) {
+                return response()->json([
+                    'message'    => 'Uploaded successfully',
+                    'status' => 201,
+                ], 201);
+            }
+        } else {
+            return response()->json([
+                'message' => 'Please select a file',
+                'status' => 404
+            ], 404);
+        }
+    }
     public function save(Request $request)
     {
         // dd($request->all());
@@ -54,7 +95,7 @@ class StudentController extends Controller
 
     public function get_student_lists()
     {
-        $student = Student::with('files')->get();
+        $student = Student::with('files')->orderBy('id', 'desc')->get();
         // dd($student);
         if ($student) {
             return response()->json([
@@ -70,15 +111,36 @@ class StudentController extends Controller
         }
     }
 
+    public function send_mail(Request $request, $id)
+    {
+        $student = Student::find($id);
+        $files = File::where('student_id', $id)->get();
+        // dd($files);
+        $file_array = [];
+        foreach ($files as $file) {
+            // dd($file->file_path);
+            array_push($file_array, $file->file_path);
+        }
+
+        Mail::to($request->to)->queue(new StudentMail($student->student_name, $student->course_name, $file_array, $request->subject));
+        return response()->json([
+            'message'    => 'Mail sent',
+            'status' => 200
+        ]);
+    }
+
     public function get_student_details($id)
     {
         $files = Student::where('id', $id)->with('files')->first();
+        $agency_name = User::find($files->user_id);
+        // dd($agency_name->agency_name);
         // dd($student);
         if ($files) {
             return response()->json([
                 'message' => 'success',
                 'status' => 200,
-                'data' => $files
+                'data' => $files,
+                'agency' => $agency_name->agency_name
             ], 200);
         } else {
             return response()->json([
@@ -90,7 +152,7 @@ class StudentController extends Controller
 
     public function student_show_agency($id)
     {
-        $students = Student::where('user_id', $id)->with('files')->get();
+        $students = Student::where('user_id', $id)->with('files')->orderBy('id', 'desc')->get();
         if ($students) {
             return response()->json([
                 'message' => 'success',

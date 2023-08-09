@@ -19,10 +19,6 @@ class User extends Authenticatable
      */
     protected $guarded = [];
 
-    public function students(){
-        return $this->hasMany(Student::class);
-    }
-
     /**
      * The attributes that should be hidden for serialization.
      *

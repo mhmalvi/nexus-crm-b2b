@@ -20,6 +20,7 @@ class CreateStudentsTable extends Migration
             $table->bigInteger('user_id');
             $table->tinyInteger('status')->default(2);
             $table->text('comment')->nullable();
+            $table->tinyInteger('status')->default(2);
             $table->timestamps();
         });
     }

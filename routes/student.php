@@ -17,6 +17,8 @@ Route::middleware(['auth:sanctum', 'manager'])->group(
     }
 );
 
+Route::get('/generate-pdf', [StudentController::class, 'generatePDF']);
+
 Route::middleware(['auth:sanctum', 'agency'])->group(
     function () {
         Route::get('/agency_id={id}/show-student-agency', [StudentController::class, 'student_show_agency']);

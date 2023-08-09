@@ -12,11 +12,13 @@ class Student extends Model
     use HasFactory;
     protected $guarded = [];
 
-    public function agencies(){
+    public function agencies()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function files(){
+    public function files()
+    {
         return $this->hasMany(File::class);
     }
 }

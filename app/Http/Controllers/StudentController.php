@@ -8,6 +8,7 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\StudentMail;
+use PDF;
 
 class StudentController extends Controller
 {
@@ -91,6 +92,18 @@ class StudentController extends Controller
                 'status' => 404
             ], 404);
         }
+    }
+
+    public function generatePDF()
+    {
+        $data = [
+            'title' => 'Welcome to ItSolutionStuff.com',
+            'date' => date('m/d/Y')
+        ];
+
+        $pdf = PDF::loadView('myPDF', $data);
+
+        return $pdf->download('itsolutionstuff.pdf');
     }
 
     public function get_student_lists()

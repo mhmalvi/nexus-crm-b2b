@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -65,12 +65,6 @@ class UserController extends Controller
     public function user_login(Request $request)         ////////////////  login  ////////////////
     {
         if ($request->role == 1) {
-            // if (Auth::attempt(['abn_number' => $request->abn_number, 'role' => $request->role, 'password' => $request->password])) {
-            //     $authUser = $request->user();
-            //     $authUser->api_token = Str::random(100);
-            //     $authUser->save();
-            //     return response()->json($authUser);
-            // }
             $user = User::where('abn_number', '=', $request->abn_number)->where('role', '=', $request->role)->first();
             // if (!Auth::attempt(['abn_number'=>$request->abn_number, 'password'=>$request->password, 'role'=>1])) {
             if (!$user || !Hash::check($request->password, $user->password)) {
@@ -84,6 +78,7 @@ class UserController extends Controller
                 $abn_number = $user->abn_number;
                 $phone_number = $user->phone_number;
                 $address = $user->address;
+                $user_id = $user->id;
 
                 // dd($address);
                 // $user = User::where('abn_number', $request->abn_number)->first();
@@ -94,7 +89,7 @@ class UserController extends Controller
                         'status' => '200',
                         'token' => $token,
                         'data' => [
-                            'email' => $email, 'agency_name' => $agency_name, 'abn_number' => $abn_number, 'phone' => $phone_number, 'address' => $address
+                            'user_id' => $user_id, 'email' => $email, 'name' => $agency_name, 'abn_number' => $abn_number, 'phone' => $phone_number, 'address' => $address, 'role' => 1
                         ]
                     ], 200);
                 } else {
@@ -105,6 +100,38 @@ class UserController extends Controller
                 }
             }
         } else if ($request->role == 2) {
+            $user = User::where('email', '=', $request->email)->where('role', '=', $request->role)->first();
+            // if (!Auth::attempt(['abn_number'=>$request->abn_number, 'password'=>$request->password, 'role'=>1])) {
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'message' => 'Wrong ABN number or password',
+                    'status' => '500'
+                ], 500);
+            } else {
+                $email = $user->email;
+                $manager_name = $user->manager_name;
+                $phone_number = $user->phone_number;
+                $user_id = $user->id;
+
+                // dd($address);
+                // $user = User::where('abn_number', $request->abn_number)->first();
+                $token = $user->createToken('API_TOKEN')->plainTextToken;
+                if ($token) {
+                    return response()->json([
+                        'message' => 'Login successful',
+                        'status' => '200',
+                        'token' => $token,
+                        'data' => [
+                            'user_id' => $user_id, 'email' => $email, 'name' => $manager_name, 'phone' => $phone_number,  'role' => 2
+                        ]
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'message' => 'Login failed',
+                        'status' => '500',
+                    ]);
+                }
+            }
         }
     }
 

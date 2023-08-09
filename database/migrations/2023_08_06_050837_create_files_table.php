@@ -20,6 +20,7 @@ class CreateFilesTable extends Migration
             $table->tinyInteger('status')->default(2);
             $table->unsignedBigInteger('student_id');
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade')->onUpdate('cascade');
+            $table->tinyInteger('status')->default(2);
             $table->timestamps();
         });
     }

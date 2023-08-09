@@ -44,7 +44,10 @@ class StudentMail extends Mailable
         $this
             ->subject($this->subject)->with(['student_name' => $this->student_name, 'course_name' => $this->course_name])
             ->markdown('studentMail');
+        // dd($this->file_path);
         foreach ($this->file_path as $file) {
+            // $content = File::get());
+            // dd($content);
             $this->attach(public_path($file));
         }
         return $this;

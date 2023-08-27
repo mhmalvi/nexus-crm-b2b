@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\StudentInvoice;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use App\Models\MandatoryFile;
 
 class StudentController extends Controller
 {

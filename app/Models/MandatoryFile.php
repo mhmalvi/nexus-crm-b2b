@@ -9,7 +9,12 @@ class MandatoryFile extends Model
 {
     use HasFactory;
 
-    protected $guarded=[];
+    protected $guarded = [];
 
     protected $table = "mandatory_files";
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
 }

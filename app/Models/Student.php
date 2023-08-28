@@ -27,4 +27,9 @@ class Student extends Model
     {
         return $this->hasOne(StudentInvoice::class);
     }
+
+    public function mandatory_files()
+    {
+        return $this->hasMany(MandatoryFile::class);
+    }
 }

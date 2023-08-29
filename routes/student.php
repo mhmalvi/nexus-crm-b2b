@@ -26,6 +26,8 @@ Route::get('/agency_id={id}/show-student-agency', [StudentController::class, 'st
 Route::get('/agency_id={agency_id}/student_id={id}/show-student-details-agency', [StudentController::class, 'student_show_details_agency']);
 
 Route::post('/student_id={student_id}/file_id={file_id}/delete-file-by-agency', [StudentController::class, 'delete_file_by_agency']);
+
+Route::post('/pay-slip', [Studentcontroller::class, 'pay_slip']);
 //     }
 // );
 

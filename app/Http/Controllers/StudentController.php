@@ -266,6 +266,8 @@ class StudentController extends Controller
 
     }
 
+
+    ///////////////////////////// upload payment slip////////////////
     public function pay_slip(Request $request)
     {
         // dd("hello");

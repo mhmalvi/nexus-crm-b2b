@@ -64,11 +64,19 @@ class AccountantController extends Controller
                 $student->pay_slip_status = $request->status;
                 $update = $student->save();
                 if ($update) {
-                    return response()->json([
-                        'message'    => 'Status changed',
-                        'status' => 201,
-                        'data' => $update
-                    ], 201);
+                    if ($request->status == 1) {
+                        return response()->json([
+                            'message'    => 'Approved',
+                            'status' => 201,
+                            'data' => $update
+                        ], 201);
+                    } else if ($request->status == 2) {
+                        return response()->json([
+                            'message'    => 'Disapproved',
+                            'status' => 201,
+                            'data' => $update
+                        ], 201);
+                    }
                 } else {
                     return response()->json([
                         'message'    => 'Failed',

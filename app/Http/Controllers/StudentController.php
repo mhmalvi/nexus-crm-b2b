@@ -68,11 +68,14 @@ class StudentController extends Controller
         if ($flag_receive == 1) {
             // dd(json_decode($request->all()));
             $course = json_decode($request->course);
+            $agency = json_decode($request->agency);
             $student = new Student();
             $student->student_name = $request->student_name;
             $student->course_name = $course->label;
             $student->course_id = $course->value;
-            $student->user_id = $request->user_id;
+            $student->user_id = $agency->id;
+            $student->agency_email = $agency->email;
+            $student->agency_name = $agency->full_name;
 
             $student->save();
 
@@ -84,7 +87,7 @@ class StudentController extends Controller
             $photo_id_file_path = "assets/photo_id/" . $fileName;
 
             $mandatory_file->status = 2;
-            $mandatory_file->file_type = "photo_id";
+            $mandatory_file->file_type = "Photo ID";
             $mandatory_file->file_name = $photo_id_name;
             $mandatory_file->file_path = $photo_id_file_path;
             $mandatory_file->student_id = $student->id;
@@ -97,7 +100,7 @@ class StudentController extends Controller
             $request->resume->move(public_path('assets/resume'), $fileName);
             $resume_file_path = "assets/resume/" . $fileName;
             $mandatory_file->status = 2;
-            $mandatory_file->file_type = "resume";
+            $mandatory_file->file_type = "Resume";
             $mandatory_file->file_name = $resume_name;
             $mandatory_file->file_path = $resume_file_path;
             $mandatory_file->student_id = $student->id;
@@ -109,7 +112,7 @@ class StudentController extends Controller
             $fileName = time() . '.' . $request->reference_letter->getClientOriginalExtension();
             $request->reference_letter->move(public_path('assets/reference_letter'), $fileName);
             $reference_letter_path = "assets/reference_letter/" . $fileName;
-            $mandatory_file->file_type = "reference_letter";
+            $mandatory_file->file_type = "Reference Letter";
             $mandatory_file->status = 2;
             $mandatory_file->file_name = $reference_letter_name;
             $mandatory_file->file_path = $reference_letter_path;
@@ -122,7 +125,7 @@ class StudentController extends Controller
             $fileName = time() . '.' . $request->visa_copy->getClientOriginalExtension();
             $request->visa_copy->move(public_path('assets/visa_copy'), $fileName);
             $visa_copy_file_path = "assets/visa_copy/" . $fileName;
-            $mandatory_file->file_type = "visa_copy";
+            $mandatory_file->file_type = "Visa Copy";
             $mandatory_file->file_name = $visa_copy_name;
             $mandatory_file->file_path = $visa_copy_file_path;
             $mandatory_file->status = 2;
@@ -135,7 +138,7 @@ class StudentController extends Controller
             $fileName = time() . '.' . $request->academic_qualification->getClientOriginalExtension();
             $request->academic_qualification->move(public_path('assets/academic_qualification'), $fileName);
             $academic_qualification_file_path = "assets/academic_qualification/" . $fileName;
-            $mandatory_file->file_type = "academic_qualification";
+            $mandatory_file->file_type = "Academic Qualification";
             $mandatory_file->file_name = $academic_qualification_name;
             $mandatory_file->file_path = $academic_qualification_file_path;
             $mandatory_file->status = 2;
@@ -148,7 +151,7 @@ class StudentController extends Controller
             $fileName = time() . '.' . $request->photo_video->getClientOriginalExtension();
             $request->photo_video->move(public_path('assets/photo_video'), $fileName);
             $photo_video_file_path = "assets/photo_video/" . $fileName;
-            $mandatory_file->file_type = "photo_video";
+            $mandatory_file->file_type = "Photo Video";
             $mandatory_file->file_name = $photo_video_name;
             $mandatory_file->file_path = $photo_video_file_path;
             $mandatory_file->status = 2;
@@ -161,7 +164,7 @@ class StudentController extends Controller
             $fileName = time() . '.' . $request->usi_number->getClientOriginalExtension();
             $request->usi_number->move(public_path('assets/usi_number'), $fileName);
             $usi_number_file_path = "assets/usi_number/" . $fileName;
-            $mandatory_file->file_type = "usi_number";
+            $mandatory_file->file_type = "Usi Number";
             $mandatory_file->file_name = $usi_number_name;
             $mandatory_file->file_path = $usi_number_file_path;
             $mandatory_file->status = 2;
@@ -366,7 +369,7 @@ class StudentController extends Controller
         }
     }
 
-    public function student_show_agency($id)
+    public function student_show_agency(Request $request, $id)
     {
         $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
         $flag_receive = $flag['data'];
@@ -387,7 +390,7 @@ class StudentController extends Controller
         }
     }
 
-    public function student_show_details_agency($agency_id, $id)
+    public function student_show_details_agency(Request $request, $agency_id, $id)
     {
         $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
         $flag_receive = $flag['data'];

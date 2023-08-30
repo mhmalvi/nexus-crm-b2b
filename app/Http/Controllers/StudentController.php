@@ -282,6 +282,7 @@ class StudentController extends Controller
                 $request->pay_slip->move(public_path('assets/pay_slip'), $fileName);
                 $pay_slip_file_path = "assets/pay_slip/" . $fileName;
                 $student->pay_slip = $pay_slip_file_path;
+                $student->pay_slip_status = 0;
                 $save = $student->save();
                 if ($save) {
                     return response()->json([

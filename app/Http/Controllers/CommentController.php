@@ -11,10 +11,12 @@ class CommentController extends Controller
     ////////////////////// add file comment by student admin /////////////////////
     public function admin_add_comment(Request $request)
     {
+        /// check token
         if ($request->bearerToken()) {
             $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
             $flag_receive = $flag['data'];
             if ($flag_receive == 1) {
+                /// insert comment 
                 $data = Comment::create([
                     'user_id' => $request->user_id,
                     'comments' => $request->comments,
@@ -50,10 +52,12 @@ class CommentController extends Controller
     ////////////////////// add file comment by agency /////////////////////
     public function agency_add_comment(Request $request)
     {
+        /// check token
         if ($request->bearerToken()) {
             $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
             $flag_receive = $flag['data'];
             if ($flag_receive == 1) {
+                /// insert comment 
                 $data = Comment::create([
                     'user_id' => $request->user_id,
                     'comments' => $request->comments,
@@ -86,9 +90,10 @@ class CommentController extends Controller
         }
     }
 
-    ////////////////////// show file comments /////////////////////
+    ////////////////////// show file comments by file id /////////////////////
     public function get_comment(Request $request, $file_id)
     {
+        /// fetch comments
         $comments = Comment::where('file_id', $request->file_id)->get();
         if ($comments) {
             return response()->json([

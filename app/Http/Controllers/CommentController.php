@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 
 class CommentController extends Controller
 {
+    ////////////////////// add file comment by student admin /////////////////////
     public function admin_add_comment(Request $request)
     {
         if ($request->bearerToken()) {
@@ -46,6 +47,7 @@ class CommentController extends Controller
         }
     }
 
+    ////////////////////// add file comment by agency /////////////////////
     public function agency_add_comment(Request $request)
     {
         if ($request->bearerToken()) {
@@ -84,6 +86,7 @@ class CommentController extends Controller
         }
     }
 
+    ////////////////////// show file comments /////////////////////
     public function get_comment(Request $request, $file_id)
     {
         $comments = Comment::where('file_id', $request->file_id)->get();

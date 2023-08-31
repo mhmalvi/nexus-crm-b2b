@@ -18,6 +18,8 @@ Route::post('/student_id={student_id}/generate-pdf', [StudentController::class, 
 //     }
 // );
 
+Route::post('/certificate-upload', [StudentController::class, 'certificate_upload']);
+
 
 
 // Route::middleware(['auth:sanctum', 'agency'])->group(

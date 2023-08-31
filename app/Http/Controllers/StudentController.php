@@ -481,6 +481,51 @@ class StudentController extends Controller
         }
     }
 
+    ////////////// certificate upload by admin ///////////////////////////
+    public function certificate_upload(Request $request)
+    {
+        if ($request->bearerToken()) {
+            $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+            $flag_receive = $flag['data'];
+            if ($flag_receive == 1) {
+                $student = Student::find($request->student_id);
+                if ($student->certificate != null) {
+                    unlink(public_path($student->certificate));
+                }
+                $certificate_name = $request->certificate->getClientOriginalName();
+                $fileName = time() . '.' . $request->certificate->getClientOriginalExtension();
+                $request->certificate->move(public_path('assets/certificate'), $fileName);
+                $certificate_file_path = "assets/certificate/" . $fileName;
+                $student->certificate = $certificate_file_path;
+                $response = $student->save();
+                if ($response) {
+                    return response()->json([
+                        'message' => 'success',
+                        'status' => 201,
+                        'data' => $response
+                    ], 201);
+                } else {
+                    return response()->json([
+                        'message' => 'Failed',
+                        'status' => 500
+                    ], 500);
+                }
+            } else {
+                return response()->json([
+                    'message' => 'Unauthenticated',
+                    'status' => 401
+                ], 401);
+            }
+        } else {
+            return response()->json([
+                'message' => 'Unauthenticated',
+                'status' => 401
+            ], 401);
+        }
+    }
+
+
+    ///////////// change file status //////////////////
     public function change_status(Request $request)
     {
         $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');

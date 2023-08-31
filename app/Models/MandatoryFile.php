@@ -17,4 +17,9 @@ class MandatoryFile extends Model
     {
         return $this->belongsTo(Student::class);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class,'file_id');
+    }
 }

@@ -58,6 +58,11 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/accountant.php'));
 
+            Route::prefix('comment')
+                ->middleware('api')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/comment.php'));
+
             Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));

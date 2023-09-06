@@ -11,12 +11,43 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Http;
 use App\Mail\StudentMail;
+use App\Models\Comment;
 use PDF;
 use App\Models\StudentInvoice;
 use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
+
+    public function admin_analytics(Request $request)
+    {
+        // dd("hello");
+        if ($request->bearerToken()) {
+            $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+            $flag_receive = $flag['data'];
+            if ($flag_receive == 1) {
+                $approved = Student::where('status', 1)->count();
+                $pending = Student::where('status', 2)->count();
+                $rejected = Student::where('status', 0)->count();
+                $certified = Student::where('certificate', '!=', null)->count();
+                return response()->json([
+                    'message' => 'success',
+                    'status' => 200,
+                    'data' => ['approved' => $approved, 'pending' => $pending, 'rejected' => $rejected, 'certified' => $certified]
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Unauthenticated',
+                    'status' => 401
+                ], 401);
+            }
+        } else {
+            return response()->json([
+                'message' => 'Unauthenticated',
+                'status' => 401
+            ], 401);
+        }
+    }
 
     public function update_file(Request $request, $student_id)
     {

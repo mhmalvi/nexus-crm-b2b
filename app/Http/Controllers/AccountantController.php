@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use App\Models\Accountant;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use DB;
 
 class AccountantController extends Controller
 {
@@ -127,5 +129,11 @@ class AccountantController extends Controller
                 'status' => 401
             ], 401);
         }
+    }
+
+    public function accountant_current_year_dashboard_data(Request $request)
+    {
+        $curr_year = Carbon::now()->format('Y');
+        dd($curr_year);
     }
 }

@@ -15,6 +15,7 @@ Route::get('/student_id={id}/student-details', [StudentController::class, 'get_s
 Route::post('/change-status', [StudentController::class, 'change_status']);
 Route::post('/student_id={id}/send-mail', [StudentController::class, 'send_mail']);
 Route::post('/student_id={student_id}/generate-pdf', [StudentController::class, 'generatePDF']);
+Route::get('/admin-analytics', [StudentController::class, 'admin_analytics']);
 //     }
 // );
 

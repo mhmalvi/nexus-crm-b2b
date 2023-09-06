@@ -49,6 +49,40 @@ class StudentController extends Controller
         }
     }
 
+    public function admin_graph(Request $request)
+    {
+        if ($request->bearerToken()) {
+            $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+            $flag_receive = $flag['data'];
+            if ($flag_receive == 1) {
+                $data = Student::select(DB::raw("(COUNT(*)) as count"), DB::raw("MONTHNAME(created_at) as monthname"))->where('certificate', '!=', null)->whereYear('created_at', date('Y', strtotime('0 year')))->groupBy('monthname')->get();
+
+                if ($data) {
+                    return response()->json([
+                        'message'    => 'success',
+                        'status' => 200,
+                        'data' => $data
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'message'    => 'failed',
+                        'status' => 500
+                    ], 500);
+                }
+            } else {
+                return response()->json([
+                    'message' => 'Unauthenticated',
+                    'status' => 401
+                ], 401);
+            }
+        } else {
+            return response()->json([
+                'message' => 'Unauthenticated',
+                'status' => 401
+            ], 401);
+        }
+    }
+
     public function update_file(Request $request, $student_id)
     {
         $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');

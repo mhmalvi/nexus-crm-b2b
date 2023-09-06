@@ -96,4 +96,36 @@ class AccountantController extends Controller
             ], 401);
         }
     }
+
+
+    ///////////////////// accountant dashboard analytics //////////////////////
+    public function accountant_analytics(Request $request)
+    {
+        // dd("hello");
+        if ($request->bearerToken()) {
+            $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+            $flag_receive = $flag['data'];
+            if ($flag_receive == 1) {
+                $slip_approved = Student::where('pay_slip_status', 1)->count();
+                $slip_pending = Student::where('pay_slip_status', 0)->count();
+                $slip_rejected = Student::where('pay_slip_status', 2)->count();
+                $total_student = Student::count();
+                return response()->json([
+                    'message' => 'success',
+                    'status' => 200,
+                    'data' => ['slip_approved' => $slip_approved, 'slip_pending' => $slip_pending, 'slip_rejected' => $slip_rejected, 'total_student' => $total_student]
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Unauthenticated',
+                    'status' => 401
+                ], 401);
+            }
+        } else {
+            return response()->json([
+                'message' => 'Unauthenticated',
+                'status' => 401
+            ], 401);
+        }
+    }
 }

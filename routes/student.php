@@ -11,12 +11,16 @@ Route::post('/student-save', [StudentController::class, 'save']);
 // Route::middleware(['auth:sanctum', 'manager'])->group(
 //     function () {
 Route::get('/student-lists', [StudentController::class, 'get_student_lists']);
+Route::get('/student-search', [StudentController::class, 'search_student_in_student_admin']);
+Route::get('/student-search-in-agency', [StudentController::class, 'search_student_in_student_agency']);
 Route::get('/student_id={id}/student-details', [StudentController::class, 'get_student_details']);
 Route::post('/change-status', [StudentController::class, 'change_status']);
 Route::post('/student_id={id}/send-mail', [StudentController::class, 'send_mail']);
 Route::post('/student_id={student_id}/generate-pdf', [StudentController::class, 'generatePDF']);
 Route::get('/admin-analytics', [StudentController::class, 'admin_analytics']);
 Route::get('/admin-graph', [StudentController::class, 'admin_graph']);
+Route::get('agency_id={user_id}/agency-analytics', [StudentController::class, 'agency_analytics']);
+Route::post('file_id={file_id}/flag_id={flag_id}/update-file', [StudentController::class, 'update_single_file']);
 //     }
 // );
 

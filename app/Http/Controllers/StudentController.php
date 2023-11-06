@@ -175,6 +175,7 @@ class StudentController extends Controller
     }
     public function save(Request $request)    //////////////// register student with files
     {
+        // dd($request->all());
         $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
         $flag_receive = $flag['data'];
         if ($flag_receive == 1) {
@@ -194,10 +195,10 @@ class StudentController extends Controller
 
                 $mandatory_file = new MandatoryFile();
                 $photo_id_name = $request->photo_id->getClientOriginalName();
-                $fileName = time() . '.' . $request->photo_id->getClientOriginalExtension();
-                $request->photo_id->move(public_path('assets/files'), $fileName);
-                $photo_id_file_path = "assets/files/" . $fileName;
-
+                // $fileName = time() . '.' . $request->photo_id->getClientOriginalExtension();
+                // $request->photo_id->move(public_path('assets/files'), $fileName);
+                // $photo_id_file_path = "assets/files/" . $fileName;
+                $photo_id_file_path = $request->photo_id->store('assets/files', ['disk' =>   'files']);
                 $mandatory_file->status = 2;
                 $mandatory_file->file_type = "Photo ID";
                 $mandatory_file->file_name = $photo_id_name;
@@ -208,9 +209,10 @@ class StudentController extends Controller
                 /////////////////////////////////////////////////
                 $mandatory_file = new MandatoryFile();
                 $resume_name = $request->resume->getClientOriginalName();
-                $fileName = time() . '.' . $request->resume->getClientOriginalExtension();
-                $request->resume->move(public_path('assets/files'), $fileName);
-                $resume_file_path = "assets/files/" . $fileName;
+                // $fileName = time() . '.' . $request->resume->getClientOriginalExtension();
+                // $request->resume->move(public_path('assets/files'), $fileName);
+                // $resume_file_path = "assets/files/" . $fileName;
+                $resume_file_path = $request->resume->store('assets/files', ['disk' =>   'files']);
                 $mandatory_file->status = 2;
                 $mandatory_file->file_type = "Resume";
                 $mandatory_file->file_name = $resume_name;
@@ -221,9 +223,10 @@ class StudentController extends Controller
                 //////////////////////////////////////////
                 $mandatory_file = new MandatoryFile();
                 $reference_letter_name = $request->reference_letter->getClientOriginalName();
-                $fileName = time() . '.' . $request->reference_letter->getClientOriginalExtension();
-                $request->reference_letter->move(public_path('assets/files'), $fileName);
-                $reference_letter_path = "assets/files/" . $fileName;
+                // $fileName = time() . '.' . $request->reference_letter->getClientOriginalExtension();
+                // $request->reference_letter->move(public_path('assets/files'), $fileName);
+                // $reference_letter_path = "assets/files/" . $fileName;
+                $reference_letter_path = $request->reference_letter->store('assets/files', ['disk' =>   'files']);
                 $mandatory_file->file_type = "Reference Letter";
                 $mandatory_file->status = 2;
                 $mandatory_file->file_name = $reference_letter_name;
@@ -234,9 +237,10 @@ class StudentController extends Controller
                 ///////////////////////////////////
                 $mandatory_file = new MandatoryFile();
                 $visa_copy_name = $request->visa_copy->getClientOriginalName();
-                $fileName = time() . '.' . $request->visa_copy->getClientOriginalExtension();
-                $request->visa_copy->move(public_path('assets/files'), $fileName);
-                $visa_copy_file_path = "assets/files/" . $fileName;
+                // $fileName = time() . '.' . $request->visa_copy->getClientOriginalExtension();
+                // $request->visa_copy->move(public_path('assets/files'), $fileName);
+                // $visa_copy_file_path = "assets/files/" . $fileName;
+                $visa_copy_file_path = $request->visa_copy->store('assets/files', ['disk' =>   'files']);
                 $mandatory_file->file_type = "Visa Copy";
                 $mandatory_file->file_name = $visa_copy_name;
                 $mandatory_file->file_path = $visa_copy_file_path;
@@ -247,9 +251,10 @@ class StudentController extends Controller
                 /////////////////////////////////
                 $mandatory_file = new MandatoryFile();
                 $academic_qualification_name = $request->academic_qualification->getClientOriginalName();
-                $fileName = time() . '.' . $request->academic_qualification->getClientOriginalExtension();
-                $request->academic_qualification->move(public_path('assets/files'), $fileName);
-                $academic_qualification_file_path = "assets/files/" . $fileName;
+                // $fileName = time() . '.' . $request->academic_qualification->getClientOriginalExtension();
+                // $request->academic_qualification->move(public_path('assets/files'), $fileName);
+                // $academic_qualification_file_path = "assets/files/" . $fileName;
+                $academic_qualification_file_path = $request->academic_qualification->store('assets/files', ['disk' =>   'files']);
                 $mandatory_file->file_type = "Academic Qualification";
                 $mandatory_file->file_name = $academic_qualification_name;
                 $mandatory_file->file_path = $academic_qualification_file_path;
@@ -260,9 +265,10 @@ class StudentController extends Controller
                 ///////////////////////////////
                 $mandatory_file = new MandatoryFile();
                 $photo_video_name = $request->photo_video->getClientOriginalName();
-                $fileName = time() . '.' . $request->photo_video->getClientOriginalExtension();
-                $request->photo_video->move(public_path('assets/files'), $fileName);
-                $photo_video_file_path = "assets/files/" . $fileName;
+                // $fileName = time() . '.' . $request->photo_video->getClientOriginalExtension();
+                // $request->photo_video->move(public_path('assets/files'), $fileName);
+                // $photo_video_file_path = "assets/files/" . $fileName;
+                $photo_video_file_path = $request->photo_video->store('assets/files', ['disk' =>   'files']);
                 $mandatory_file->file_type = "Photo Video";
                 $mandatory_file->file_name = $photo_video_name;
                 $mandatory_file->file_path = $photo_video_file_path;
@@ -273,9 +279,10 @@ class StudentController extends Controller
                 ////////////////////////////
                 $mandatory_file = new MandatoryFile();
                 $usi_number_name = $request->usi_number->getClientOriginalName();
-                $fileName = time() . '.' . $request->usi_number->getClientOriginalExtension();
-                $request->usi_number->move(public_path('assets/files'), $fileName);
-                $usi_number_file_path = "assets/files/" . $fileName;
+                // $fileName = time() . '.' . $request->usi_number->getClientOriginalExtension();
+                // $request->usi_number->move(public_path('assets/files'), $fileName);
+                // $usi_number_file_path = "assets/files/" . $fileName;
+                $usi_number_file_path = $request->usi_number->store('assets/files', ['disk' =>   'files']);
                 $mandatory_file->file_type = "Usi Number";
                 $mandatory_file->file_name = $usi_number_name;
                 $mandatory_file->file_path = $usi_number_file_path;

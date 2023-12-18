@@ -21,8 +21,6 @@
         </style>
     </head>
     <body class="antialiased">
-       <div style="align-content:center;">
-           <p>App Name: B2B Service</p>
-       </div>
+       <h1>Queleads</h1>
     </body>
 </html>

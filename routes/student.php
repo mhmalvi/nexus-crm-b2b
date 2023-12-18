@@ -10,32 +10,32 @@ Route::post('/student-save', [StudentController::class, 'save']);
 
 // Route::middleware(['auth:sanctum', 'manager'])->group(
 //     function () {
-Route::get('/student-lists', [StudentController::class, 'get_student_lists']);
-Route::get('/student-search', [StudentController::class, 'search_student_in_student_admin']);
-Route::get('/student-search-in-agency', [StudentController::class, 'search_student_in_student_agency']);
-Route::get('/student_id={id}/student-details', [StudentController::class, 'get_student_details']);
-Route::post('/change-status', [StudentController::class, 'change_status']);
-Route::post('/student_id={id}/send-mail', [StudentController::class, 'send_mail']);
-Route::post('/student_id={student_id}/generate-pdf', [StudentController::class, 'generatePDF']);
-Route::get('/admin-analytics', [StudentController::class, 'admin_analytics']);
-Route::get('/admin-graph', [StudentController::class, 'admin_graph']);
-Route::get('agency_id={user_id}/agency-analytics', [StudentController::class, 'agency_analytics']);
-Route::post('file_id={file_id}/flag_id={flag_id}/update-file', [StudentController::class, 'update_single_file']);
+        Route::get('/student-lists', [StudentController::class, 'get_student_lists']);
+        Route::post('/student-search',[StudentController::class,'search_student_in_student_admin']);
+        Route::post('/student-search-in-agency',[StudentController::class,'search_student_in_student_agency']);
+        Route::get('/student_id={id}/student-details', [StudentController::class, 'get_student_details']);
+        Route::post('/change-status', [StudentController::class, 'change_status']);
+        Route::post('/student_id={id}/send-mail', [StudentController::class, 'send_mail']);
+        Route::post('/student_id={student_id}/generate-pdf', [StudentController::class, 'generatePDF']);
+        Route::get('/admin-analytics',[StudentController::class,'admin_analytics']);
+        Route::get('/admin-graph',[StudentController::class,'admin_graph']);
+        Route::get('agency_id={user_id}/agency-analytics',[StudentController::class,'agency_analytics']);
+        Route::post('file_id={file_id}/flag_id={flag_id}/update-file',[StudentController::class,'update_single_file']);
 //     }
 // );
 
-Route::post('/certificate-upload', [StudentController::class, 'certificate_upload']);
+Route::post('/certificate-upload',[StudentController::class,'certificate_upload']);
 
 
 
 // Route::middleware(['auth:sanctum', 'agency'])->group(
 //     function () {
-Route::get('/agency_id={id}/show-student-agency', [StudentController::class, 'student_show_agency']);
-Route::get('/agency_id={agency_id}/student_id={id}/show-student-details-agency', [StudentController::class, 'student_show_details_agency']);
+        Route::get('/agency_id={id}/show-student-agency', [StudentController::class, 'student_show_agency']);
+        Route::get('/agency_id={agency_id}/student_id={id}/show-student-details-agency', [StudentController::class, 'student_show_details_agency']);
 
-Route::post('/student_id={student_id}/file_id={file_id}/delete-file-by-agency', [StudentController::class, 'delete_file_by_agency']);
-
-Route::post('/pay-slip', [Studentcontroller::class, 'pay_slip']);
+        Route::post('/student_id={student_id}/file_id={file_id}/delete-file-by-agency', [StudentController::class, 'delete_file_by_agency']);
+        
+        Route::post('/pay-slip',[Studentcontroller::class,'pay_slip']);
 //     }
 // );
 

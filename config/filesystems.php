@@ -55,6 +55,10 @@ return [
         'student_files' => [
             'driver' => 'local',
             'root'   => public_path() . '/'
+        ],
+        'files'=>[
+            'driver' => 'local',
+            'root'   => public_path() . '/'
         ]
 
     ],

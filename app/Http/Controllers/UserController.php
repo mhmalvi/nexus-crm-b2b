@@ -6,8 +6,11 @@ use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\UserRegisterEmail;
 
 class UserController extends Controller
 {
@@ -18,43 +21,74 @@ class UserController extends Controller
     }
     public function signup(Request $request)
     {
-        $user = new User();
-        if ($request->role === 1) {    //////////// for agency signup
-            $user->email = $request->email;
-            $user->agency_name = $request->name;
-            $user->abn_number = $request->abn_number;
-            $user->role = 1;
-            $user->address = $request->address;
-            $user->password = Hash::make($request->password);
-            $signup = $user->save();
-            if ($signup) {
-                return response()->json([
-                    'message' => 'Signup successful',
-                    'status' => 201,
-                ], 201);
-            } else {
-                return response()->json([
-                    'message' => 'Signup failed',
-                    'status' => 500,
-                ], 500);
-            }
-        } else if ($request->role === 2) {     /////// for manager signup
-            $user->manager_name = $request->name;
-            $user->phone_number = $request->phone_number;
-            $user->email = $request->email;
-            $user->password = Hash::make($request->password);
-            $user->role = 2;
-            $signup = $user->save();
-            if ($signup) {
-                return response()->json([
-                    'message' => 'Wait for admin approval',
-                    'status' => 201,
-                ], 201);
-            } else {
-                return response()->json([
-                    'message' => 'Signup failed',
-                    'status' => 500,
-                ], 500);
+        $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
+        $flag_receive = $flag['data'];
+        if ($flag_receive == 1) {
+            $user = new User();
+            if ($request->role === 1) {    //////////// for agency signup
+                $user->email = $request->email;
+                $user->agency_name = $request->name;
+                $user->abn_number = $request->abn_number;
+                $user->website = $request->website;
+                $user->role = 1;
+                $user->address = $request->address;
+                $user->password = Hash::make($request->password);
+                $signup = $user->save();
+                if ($signup) {
+                    return response()->json([
+                        'message' => 'Signup successful',
+                        'status' => 201,
+                    ], 201);
+                } else {
+                    return response()->json([
+                        'message' => 'Signup failed',
+                        'status' => 500,
+                    ], 500);
+                }
+            } else if ($request->role === 2) {     /////// for student admin signup
+                $user->student_admin_name = $request->name;
+                $user->phone_number = $request->contact;
+                $user->email = $request->email;
+                // $user->website = $request->website;
+                $user->company_id = $request->company_id;
+                $password = Str::random(10);
+                $user->password = Hash::make($password);
+                $user->role = 2;
+                $signup = $user->save();
+                Mail::to($request->email)->queue(new UserRegisterEmail($request->name, $request->email, $password));
+                if ($signup) {
+                    return response()->json([
+                        'message' => 'Registered',
+                        'status' => 201,
+                    ], 201);
+                } else {
+                    return response()->json([
+                        'message' => 'Signup failed',
+                        'status' => 500,
+                    ], 500);
+                }
+            } else if ($request->role === 7) {     /////// for student admin signup
+                $user->student_admin_name = $request->name;
+                $user->phone_number = $request->contact;
+                $user->email = $request->email;
+                // $user->website = $request->website;
+                $user->company_id = $request->company_id;
+                $password = Str::random(10);
+                $user->password = Hash::make($password);
+                $user->role = 2;
+                $signup = $user->save();
+                Mail::to($request->email)->queue(new UserRegisterEmail($request->name, $request->email, $password));
+                if ($signup) {
+                    return response()->json([
+                        'message' => 'Registered',
+                        'status' => 201,
+                    ], 201);
+                } else {
+                    return response()->json([
+                        'message' => 'Signup failed',
+                        'status' => 500,
+                    ], 500);
+                }
             }
         }
     }
@@ -132,6 +166,59 @@ class UserController extends Controller
                     ]);
                 }
             }
+        }
+    }
+
+    // public function fetch_
+
+    public function fetch_user(Request $request, $company_id, $role, $status)
+    {
+        $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
+        $flag_receive = $flag['data'];
+        if ($flag_receive == 1) {
+            $user = User::where('company_id', $company_id)->where('role', $role)->where('suspend_status', $status)->get();
+            if (count($user) > 0) {
+                return response()->json([
+                    'message'    => 'success',
+                    'status' => 200,
+                    'data' => $user
+                ], 200);
+            } else {
+                return response()->json([
+                    'message'    => 'Failed',
+                    'status' => 200,
+                    'data' => []
+                ], 200);
+            }
+        }
+    }
+
+    public function suspend_user(Request $request, $company_id, $user_id, $status)
+    {      ////// make user active or inactive ////////////////////////
+        $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
+        $flag_receive = $flag['data'];
+        if ($flag_receive == 1) {
+            $user = User::where('company_id', $company_id)->where('id', $user_id)->first();
+            if ($user) {
+                $user->suspend_status = $status;
+                $save = $user->save();
+                if ($save) {
+                    return response()->json([
+                        'message' => 'success',
+                        'status' => 201
+                    ], 201);
+                }
+            } else {
+                return response()->json([
+                    'message' => 'failed',
+                    'status' => 500
+                ], 500);
+            }
+        } else {
+            return response()->json([
+                'message' => 'unauthenticated',
+                'status' => 401
+            ], 401);
         }
     }
 

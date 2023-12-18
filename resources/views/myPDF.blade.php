@@ -67,8 +67,8 @@
                                 <td style=" width:50%;">
 
                                     <p style="color:grey;">BILL TO</p>
-                                    <p style="line-height:0.1%"><B>JASHWANT SINGH</B></p>
-                                    <p style="line-height:19px"><B>jashwant@gmail.com</B></p>
+                                    <p style="line-height:0.1%"><B>ITEC</B></p>
+                                    <p style="line-height:19px"><B></B></p>
 
                                 </td>
                                 <td style="align-items:center; margin:auto;">
@@ -85,7 +85,7 @@
                                             <tr>
                                                 <td><b>Invoice Date</b></td>
                                                 <td>:</td>
-                                                <td style="padding-left:6%;">June 26, 2023</td>
+                                                <td style="padding-left:6%;">{{$invoice_date}}</td>
 
                                             </tr>
                                             <tr>
@@ -98,7 +98,7 @@
 
                                                 <td><b>Amount Due (AUD)</b></td>
                                                 <td>:</td>
-                                                <td style="padding-left:6%;"><b>$1300.00</b></td>
+                                                <td style="padding-left:6%;"><b>${{$price}}</b></td>
                                             </tr>
 
                                         </tbody>
@@ -131,10 +131,10 @@
 
         <tbody>
             <tr style="">
-                <td style=" width:50%;width: 40%;">
+                <td style=" width:50%;">
 
-                    <p><B>JASHWANT SINGH</B></p>
-                    <p style="line-height:0.5px;">Diploma of Business</p>
+                    <p><B>{{$student_name}}</B></p>
+                    <p style="">{{$course_name}}</p>
 
                 </td>
                 <td style="align-items:center; margin:auto;width: 25%;">
@@ -144,10 +144,10 @@
                 </td>
                 <td style="align-items:center; margin:auto;width: 34%;">
 
-                    <p>$1300.00</p>
+                    <p>${{$price}}</p>
                 </td>
                 <td style="align-items:center; margin:auto;">
-                    <p>$1300.00</p>
+                    <p>${{$price}}</p>
                 </td>
 
             </tr>
@@ -167,7 +167,7 @@
 
                 </td>
                 <td style="align-items:center; margin:auto;">
-                    <p>$1300.00</p>
+                    <p>${{$price}}</p>
                 </td>
 
             </tr>
@@ -186,7 +186,7 @@
 
                 </td>
                 <td style="align-items:center; margin:auto;">
-                    <p><b>$1300.00</b></p>
+                    <p><b>${{$price}}</b></p>
 
 
                 </td>

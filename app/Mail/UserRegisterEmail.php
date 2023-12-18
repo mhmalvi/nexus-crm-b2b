@@ -21,7 +21,7 @@ class UserRegisterEmail extends Mailable
     public $email;
     public $password;
 
-    public function __construct($email, $name, $password)
+    public function __construct( $name,$email, $password)
     {
         $this->email = $email;
         $this->name = $name;
@@ -37,7 +37,7 @@ class UserRegisterEmail extends Mailable
     {
         $this
             ->subject($this->subject)->with(['email' => $this->email, 'name' => $this->name, 'password' => $this->password])
-            ->markdown('registration_mail.registration_mail');
+            ->markdown('registration_mail/registration_mail');
 
         return $this;
     }

@@ -9,6 +9,7 @@ use App\Models\Student;
 class StudentInvoice extends Model
 {
     use HasFactory;
+    protected $guarded=[];
 
     public function student(){
         return $this->belongsTo(Student::class);

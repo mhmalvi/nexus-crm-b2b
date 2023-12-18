@@ -24,7 +24,7 @@ class StudentController extends Controller
     {
         // dd("hello");
         if ($request->bearerToken()) {
-            $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+            $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
             $flag_receive = $flag['data'];
             if ($flag_receive == 1) {
                 $approved = Student::where('status', 1)->count();
@@ -56,7 +56,7 @@ class StudentController extends Controller
     {
         // dd("vbfggf");
         if ($request->bearerToken()) {
-            $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+            $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
             $flag_receive = $flag['data'];
             if ($flag_receive == 1) {
                 $approved = Student::where('user_id', $user_id)->where('pay_slip_status', 1)->count();
@@ -99,7 +99,7 @@ class StudentController extends Controller
     public function admin_graph(Request $request)
     {
         if ($request->bearerToken()) {
-            $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+            $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
             $flag_receive = $flag['data'];
             if ($flag_receive == 1) {
                 $data = Student::select(DB::raw("(COUNT(*)) as count"), DB::raw("MONTHNAME(created_at) as monthname"))->where('certificate', '!=', null)->whereYear('created_at', date('Y', strtotime('0 year')))->groupBy('monthname')->get();
@@ -132,7 +132,7 @@ class StudentController extends Controller
 
     public function update_file(Request $request, $student_id)
     {
-        $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+        $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
         $flag_receive = $flag['data'];
         if ($flag_receive == 1) {
             if ($request->student_file) {
@@ -176,7 +176,7 @@ class StudentController extends Controller
     public function save(Request $request)    //////////////// register student with files
     {
         // dd($request->all());
-        $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+        $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
         $flag_receive = $flag['data'];
         if ($flag_receive == 1) {
             if ($request->photo_id && $request->resume && $request->reference_letter && $request->visa_copy && $request->academic_qualification && $request->photo_video && $request->usi_number) {
@@ -344,7 +344,7 @@ class StudentController extends Controller
     {
         // dd($file_id);
         if ($request->bearerToken()) {
-            $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+            $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
             $flag_receive = $flag['data'];
 
             if ($flag_receive == 1) {
@@ -407,7 +407,7 @@ class StudentController extends Controller
     public function generatePDF(Request $request, $student_id)
     {
         // dd(Carbon\Carbon::now()->format('j-f-Y'))
-        $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+        $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
         $flag_receive = $flag['data'];
         if ($flag_receive == 1) {
             // dd(storage_path());
@@ -477,7 +477,7 @@ class StudentController extends Controller
     public function pay_slip(Request $request)
     {
         // dd("hello");
-        $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+        $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
         $flag_receive = $flag['data'];
         if ($flag_receive == 1) {
             $student = Student::find($request->student_id);
@@ -509,7 +509,7 @@ class StudentController extends Controller
 
     public function get_student_lists(Request $request)
     {
-        $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+        $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
         $flag_receive = $flag['data'];
         if ($flag_receive == 1) {
             $student = Student::with('files')->orderBy('id', 'desc')->get();
@@ -538,7 +538,7 @@ class StudentController extends Controller
     public function search_student_in_student_admin(Request $request)
     {
         if ($request->bearerToken()) {
-            $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+            $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
             $flag_receive = $flag['data'];
 
             if ($flag_receive == 1) {
@@ -573,7 +573,7 @@ class StudentController extends Controller
     public function search_student_in_student_agency(Request $request)
     {
         if ($request->bearerToken()) {
-            $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+            $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
             $flag_receive = $flag['data'];
 
             if ($flag_receive == 1) {
@@ -608,18 +608,20 @@ class StudentController extends Controller
     {
         $student = Student::find($id);
         $files = File::where('student_id', $id)->get();
+        // dd(json_decode($files));
         $mandatory_files = MandatoryFile::where('student_id', $id)->get();
         // dd($files);
         $file_array = [];
-        foreach ($files as $file) {
-            // dd($file->file_path);
-            array_push($file_array, $file->file_path);
-        }
+
 
         foreach ($mandatory_files as $man_file) {
             array_push($file_array, $man_file->file_path);
         }
 
+        foreach ($files as $file) {
+            // dd($file->file_path);
+            array_push($file_array, $file->file_path);
+        }
         Mail::to($request->to)->queue(new StudentMail($student->student_name, $student->course_name, $file_array, $request->subject));
         return response()->json([
             'message'    => 'Mail sent',
@@ -629,11 +631,11 @@ class StudentController extends Controller
 
     public function get_student_details(Request $request, $id)
     {
-        $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+        $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
         $flag_receive = $flag['data'];
         if ($flag_receive == 1) {
             $files = Student::where('id', $id)->with('files', 'invoice', 'mandatory_files')->first();
-            $user = Http::get('https://crmuser.quadque.digital/api/user-details', ['user_id' => $files->user_id, 'role' => 9]);
+            $user = Http::get(env('CRM_USER_API', '') . '/user-details', ['user_id' => $files->user_id, 'role' => 9]);
             // dd($agency_name->agency_name);
             $agency = json_decode($user);
             // dd($agency->data->full_name);
@@ -655,7 +657,7 @@ class StudentController extends Controller
 
     public function student_show_agency(Request $request, $id)
     {
-        $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+        $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
         $flag_receive = $flag['data'];
         if ($flag_receive == 1) {
             $students = Student::where('user_id', $id)->with('files', 'invoice')->orderBy('id', 'desc')->get();
@@ -676,7 +678,7 @@ class StudentController extends Controller
 
     public function student_show_details_agency(Request $request, $agency_id, $id)
     {
-        $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+        $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
         $flag_receive = $flag['data'];
         if ($flag_receive == 1) {
             //   dd($agency_id,$id) ;
@@ -701,7 +703,7 @@ class StudentController extends Controller
     public function certificate_upload(Request $request)
     {
         if ($request->bearerToken()) {
-            $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+            $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
             $flag_receive = $flag['data'];
             if ($flag_receive == 1) {
                 $student = Student::find($request->student_id);
@@ -742,7 +744,7 @@ class StudentController extends Controller
 
     public function delete_file_by_agency(Request $request, $student_id, $file_id)
     {
-        $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+        $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
         $flag_receive = $flag['data'];
         if ($flag_receive == 1) {
             if ($request->flag === 0) {
@@ -810,7 +812,7 @@ class StudentController extends Controller
     ///////////// change file status //////////////////
     public function change_status(Request $request)
     {
-        $flag = Http::withToken($request->bearerToken())->post('https://crmuser.quadque.digital/api/check-if-token-exists');
+        $flag = Http::withToken($request->bearerToken())->post(env('CRM_USER_API', '') . '/check-if-token-exists');
         $flag_receive = $flag['data'];
         if ($flag_receive == 1) {
             // dd($request->all());

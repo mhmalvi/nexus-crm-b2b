@@ -25,7 +25,6 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->integer('role')->comment('1 = agency, 2= manager');
-            $table->string('website');
             $table->rememberToken();
             $table->timestamps();
         });

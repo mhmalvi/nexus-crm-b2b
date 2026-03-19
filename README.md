@@ -1,64 +1,100 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Nexus CRM B2B
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+The B2B (Business-to-Business) service for the **Nexus CRM** platform. This Laravel-based API manages student enrollment workflows, agency partnerships, accountant operations, document processing, and certificate generation for education-sector B2B relationships.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Student Management** — Full lifecycle management of student records including enrollment, status tracking, and profile updates
+- **Agency Portal** — Agency-scoped analytics, student submissions, and performance dashboards
+- **Admin Analytics** — Aggregate statistics on approved, pending, rejected, and certified students
+- **Accountant Operations** — Dedicated controller for financial record management and student billing
+- **Comment System** — Threaded comments on student records for internal collaboration
+- **Document Management** — Upload, store, and manage mandatory student documents with file validation
+- **Certificate Generation** — PDF certificate creation and delivery via DomPDF
+- **Invoice Generation** — Student-level invoice creation and management
+- **Email Notifications** — Automated email dispatch for student status updates and communications
+- **Token-Based Auth** — Cross-service authentication via the Users microservice
+- **Asset Management** — Static asset storage for templates and branding resources
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Layer | Technology |
+|-------|-----------|
+| Framework | Laravel 10 |
+| Language | PHP 8.1+ |
+| Authentication | Laravel Sanctum (cross-service token validation) |
+| PDF Generation | barryvdh/laravel-dompdf |
+| HTTP Client | Guzzle |
+| Email | Laravel Mail |
+| Database | MySQL |
+| Testing | PHPUnit 10 |
+| Code Style | StyleCI |
 
-## Learning Laravel
+## Prerequisites
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP >= 8.1
+- Composer
+- MySQL 5.7+ or MariaDB 10.3+
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Getting Started
 
-## Laravel Sponsors
+1. **Clone the repository**
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+   ```bash
+   git clone https://github.com/mhmalvi/nexus-crm-b2b.git
+   cd nexus-crm-b2b
+   ```
 
-### Premium Partners
+2. **Install dependencies**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+   ```bash
+   composer install
+   ```
 
-## Contributing
+3. **Configure environment**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-## Code of Conduct
+   Update `.env` with database credentials, mail settings, and the `CRM_USER_API` URL for cross-service authentication.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+4. **Run database migrations**
 
-## Security Vulnerabilities
+   ```bash
+   php artisan migrate
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+   Alternatively, import the provided `crm_btob.sql` schema file.
+
+5. **Start the development server**
+
+   ```bash
+   php artisan serve
+   ```
+
+   The API will be available at `http://localhost:8000`.
+
+## Key Controllers
+
+| Controller | Responsibility |
+|-----------|---------------|
+| `StudentController` | Student CRUD, analytics, agency views, and certificate management |
+| `AccountantController` | Financial operations and student billing workflows |
+| `CommentController` | Internal comments and notes on student records |
+| `UserController` | User context and role resolution for B2B operations |
+
+## Microservices Integration
+
+| Service | Interaction |
+|---------|------------|
+| nexus-crm-users | Validates bearer tokens and resolves user identity |
+| nexus-crm-leads | Links B2B student records to lead pipeline entries |
+| nexus-crm-orgs | Retrieves company/agency context for multi-tenant operations |
+| nexus-crm-payments | Processes student-related payment transactions |
+| nexus-crm-client | Frontend consumes B2B student management APIs |
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is proprietary software. All rights reserved.

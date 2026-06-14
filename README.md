@@ -1,6 +1,8 @@
 <!-- repo-card -->
 ![nexus-crm-b2b](docs/assets/social-card.png)
 
+![nexus-crm-b2b — architecture](docs/assets/architecture.png)
+
 # Nexus CRM B2B
 
 The B2B (Business-to-Business) service for the **Nexus CRM** platform. This Laravel-based API manages student enrollment workflows, agency partnerships, accountant operations, document processing, and certificate generation for education-sector B2B relationships.
